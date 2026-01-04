@@ -11,11 +11,13 @@ const app = express();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-//middlewares
+//middleware
+
+app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
 
-app.use("/api/inngest", serve({ client: inngest, functions }));
+
 
 
 app.get("/health", (req, res) => {
@@ -51,3 +53,5 @@ const startServer = async () => {
 };
 
 startServer();
+
+// https://talent-iq-4-gxsg.onrender.com
