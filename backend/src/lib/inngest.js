@@ -18,11 +18,19 @@ const syncUser = inngest.createFunction(
             profileImage: image_url
         };
         await User.create(newUser);
-        await upsertStreamUser({
-            id: newUser.clerkId.toString(),
-            name: newUser.name,
-            image: newUser.profileImage,
-        });
+        try {
+            const streamUserData = {
+                id: newUser.clerkId,
+                name: newUser.name,
+                image: newUser.profileImage,
+            };
+            console.log("Upserting Stream user with data:", streamUserData);
+            await upsertStreamUser(streamUserData);
+            console.log("Stream user created successfully:", newUser.clerkId);
+        } catch (streamError) {
+            console.error("Failed to create Stream user:", streamError.message);
+            throw streamError;
+        }
 
 
     }
