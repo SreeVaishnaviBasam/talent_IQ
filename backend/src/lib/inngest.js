@@ -24,7 +24,6 @@ const syncUser = inngest.createFunction(
             image: newUser.profileImage,
         });
 
-
     }
 );
 
@@ -43,3 +42,4 @@ const deleteUserfromDB = inngest.createFunction(
 );
 
 export const functions = [syncUser, deleteUserfromDB];
+//kfgdgkjfkhjh
