@@ -6,6 +6,8 @@ import cors from "cors";
 import { serve } from "inngest/express";
 import { inngest, functions } from "./lib/inngest.js";
 import { fileURLToPath } from "url";
+import { clerkMiddleware } from "@clerk/express";
+import { protectRoute } from "./middleware/protectRoute.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -16,6 +18,7 @@ const __dirname = path.dirname(__filename);
 app.use("/api/inngest", serve({ client: inngest, functions }));
 app.use(express.json());
 app.use(cors({ origin: ENV.CLIENT_URL, credentials: true }));
+app.use(clerkMiddleware()); //This adds auth filed to req object:req.auth()
 
 
 
@@ -24,9 +27,12 @@ app.get("/health", (req, res) => {
     res.status(200).json({ msg: "Success from ppi" });
 })
 
-app.get("/books", (req, res) => {
-    res.status(200).json({ msg: "This is books route" });
-})
+
+//when you pass an array of middleware to express ,it automatically falttens and executes them sequentially,one by one.
+
+app.get("/video-calls", protectRoute, ((req, res) => {
+    res.status(200).json({ msg: "This is video calls route" });
+}))
 
 // make our app ready for deployment
 if (ENV.NODE_ENV === "production") {
